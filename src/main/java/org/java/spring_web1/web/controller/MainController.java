@@ -5,22 +5,37 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import org.java.spring_web1.db.pojo.Product;
+import org.java.spring_web1.db.serv.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 public class MainController {
 
-    @GetMapping("/")
-    public ResponseEntity<List<Product>> sayHello() {
+    @Autowired
+    private ProductService productService;
 
-        Product product1 = new Product("Laptop", 1000, 20);
-        Product product2 = new Product("Phone", 500, 20);
+    @GetMapping("/products/test/add")
+    public ResponseEntity<Void> addTestProduct() {
 
-        List<Product> products = List.of(product1, product2);
+        Product p1 = new Product("Test Product 1", 100, 10);
+        Product p2 = new Product("Test Product 2", 250, 40);
+        Product p3 = new Product("Test Product 3", 500, 22);
+
+        productService.save(p1);
+        productService.save(p2);
+        productService.save(p3);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getAllProducts() {
+
+        List<Product> products = productService.getAllProducts();
 
         return ResponseEntity.ok(products);
-        // return ResponseEntity.badRequest().body(products);
     }
 
 }
